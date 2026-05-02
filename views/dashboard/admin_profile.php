@@ -91,9 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_store'])) {
                 </div>
             </div>
         </div>
-    <?php require_once '../partials/footer.php'; ?>
     </div>
-    <script>function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }</script>
 </div>
 <script>function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }</script>
 </body>
