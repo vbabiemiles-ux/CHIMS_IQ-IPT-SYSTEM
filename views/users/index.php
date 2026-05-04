@@ -1,4 +1,5 @@
 <?php
+global $db;
 ob_start();
 require_once '../../autoload.php';
 $title = "User List";

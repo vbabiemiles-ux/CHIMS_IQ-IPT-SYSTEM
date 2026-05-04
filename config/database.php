@@ -2,9 +2,9 @@
 
 class Database {
     private $host = "localhost";
-    private $db_name = "integrative_db";
+    private $db_name = "db_chims_iq";
     private $username = "root";
-    private $password = "";
+    private $password = "root";
     public $conn;
 
     public function getConnection() {

@@ -6,7 +6,7 @@
  */
 function requireLogin() {
     if (!isset($_SESSION['user_id'])) {
-        header("Location: /views/auth/login.php");
+        header("Location: " . BASE_URL . "views/auth/login.php");
         exit;
     }
 }
@@ -17,7 +17,7 @@ function requireLogin() {
 function requireRole($role) {
     requireLogin();
     if ($_SESSION['role'] !== $role) {
-        header("Location: /views/auth/login.php");
+        header("Location: " . BASE_URL . "views/auth/login.php");
         exit;
     }
 }
@@ -29,11 +29,11 @@ function redirectIfLoggedIn() {
     if (isset($_SESSION['user_id'])) {
         $role = $_SESSION['role'];
         if ($role === 'superadmin') {
-            header("Location: /views/dashboard/superadmin.php");
+            header("Location: " . BASE_URL . "views/dashboard/superadmin.php");
         } elseif ($role === 'admin') {
-            header("Location: /views/dashboard/admin.php");
+            header("Location: " . BASE_URL . "views/dashboard/admin.php");
         } else {
-            header("Location: /views/dashboard/staff.php");
+            header("Location: " . BASE_URL . "views/dashboard/staff.php");
         }
         exit;
     }
@@ -51,4 +51,17 @@ function currentUser() {
         'store_id'  => $_SESSION['store_id'] ?? null,
         'store_name'=> $_SESSION['store_name'] ?? '',
     ];
+}
+
+/**
+ * Multi-tenant WHERE clause fragment
+ * Usage: "WHERE " . tenantScope('p') . " AND ..."
+ */
+function tenantScope($alias = '') {
+    $a = $alias ? $alias . '.' : '';
+    if (($_SESSION['role'] ?? '') === 'superadmin') {
+        return "1=1";
+    }
+    $storeId = (int)($_SESSION['store_id'] ?? 0);
+    return $a . "store_id = " . $storeId;
 }

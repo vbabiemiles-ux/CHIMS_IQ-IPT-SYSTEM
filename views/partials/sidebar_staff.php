@@ -1,4 +1,4 @@
-<?php $user = currentUser(); ?>
+<?php $user = currentUser(); global $db;?>
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
         <div class="brand-name">CHIMS-IQ</div>
@@ -6,7 +6,7 @@
     </div>
     <nav class="sidebar-nav">
         <div class="nav-section-label">Main</div>
-        <a href="/views/dashboard/staff.php" class="nav-item <?= basename($_SERVER['PHP_SELF']) === 'staff.php' ? 'active' : '' ?>">
+        <a href="<?= BASE_URL ?>views/dashboard/staff.php" class="nav-item <?= basename($_SERVER['PHP_SELF']) === 'staff.php' ? 'active' : '' ?>">
             <span class="nav-icon">📊</span> Dashboard
         </a>
 
@@ -17,7 +17,8 @@
         <a href="#" class="nav-item">
             <span class="nav-icon">🗃️</span> Stock
         </a>
-        <a href="#" class="nav-item">
+        <a href="<?= BASE_URL ?>views/stock/staff_flag.php"
+            class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'staff_flag') !== false ? 'active' : '' ?>">
             <span class="nav-icon">🚩</span> Flag Items
         </a>
 
@@ -37,6 +38,6 @@
                 <div class="user-info-role"><?= htmlspecialchars($user['role']) ?></div>
             </div>
         </div>
-        <a href="/controllers/auth/logout.php" class="btn-logout">Sign Out</a>
+        <a href="<?= BASE_URL ?>controllers/auth/logout.php" class="btn-logout">Sign Out</a>
     </div>
 </aside>

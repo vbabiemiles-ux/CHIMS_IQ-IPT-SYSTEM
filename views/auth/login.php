@@ -1,4 +1,5 @@
 <?php
+global $db;
 require_once '../../autoload.php';
 redirectIfLoggedIn();
 
@@ -23,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirect based on role
             $userRole = $result['role'];
             if ($userRole === 'superadmin') {
-                header("Location: /views/dashboard/superadmin.php");
+                header("Location: " . BASE_URL . "views/dashboard/superadmin.php");
             } elseif ($userRole === 'admin') {
-                header("Location: /views/dashboard/admin.php");
+                header("Location: " . BASE_URL . "views/dashboard/admin.php");
             } else {
-                header("Location: /views/dashboard/staff.php");
+                header("Location: " . BASE_URL . "views/dashboard/staff.php");
             }
             exit;
         }
@@ -40,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In — CHIMS-IQ</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
 </head>
 <body>
 <div class="auth-page">

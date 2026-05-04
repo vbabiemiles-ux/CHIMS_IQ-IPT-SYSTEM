@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CHIMS-IQ — Smart Hardware IMS</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
 </head>
 <body>
 
@@ -52,14 +52,14 @@
         <h2>Welcome to CHIMS-IQ</h2>
         <p>Please select your role to continue</p>
         <div class="role-options">
-            <a href="/views/auth/login.php?role=admin" class="role-btn">
+            <a href="<?= BASE_URL ?>views/auth/login.php?role=admin" class="role-btn">
                 <div class="role-icon">🛡️</div>
                 <div class="role-info">
                     <strong>Admin / Owner</strong>
                     <span>Full system control &amp; store management</span>
                 </div>
             </a>
-            <a href="/views/auth/login.php?role=staff" class="role-btn">
+            <a href="<?= BASE_URL ?>views/auth/login.php?role=staff" class="role-btn">
                 <div class="role-icon">👤</div>
                 <div class="role-info">
                     <strong>Staff Member</strong>

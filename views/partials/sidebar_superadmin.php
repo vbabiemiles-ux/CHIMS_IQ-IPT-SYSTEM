@@ -6,7 +6,7 @@
     </div>
     <nav class="sidebar-nav">
         <div class="nav-section-label">Main</div>
-        <a href="/views/dashboard/superadmin.php" class="nav-item active">
+        <a href="<?= BASE_URL ?>views/dashboard/superadmin.php" class="nav-item active">
             <span class="nav-icon">📊</span> Dashboard
         </a>
         <div class="nav-section-label">Management</div>
@@ -32,6 +32,6 @@
                 <div class="user-info-role"><?= htmlspecialchars($user['role']) ?></div>
             </div>
         </div>
-        <a href="/controllers/auth/logout.php" class="btn-logout">Sign Out</a>
+        <a href="<?= BASE_URL ?>controllers/auth/logout.php" class="btn-logout">Sign Out</a>
     </div>
 </aside>
