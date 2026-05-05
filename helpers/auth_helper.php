@@ -21,7 +21,7 @@ function requireRole($role) {
         return;
     }
     if ($userRole !== $role) {
-        header("Location: " . BASE_URL . "views/auth/login.php");
+        header("Location: ../views/auth/login.php");
         exit;
     }
 }
@@ -33,11 +33,11 @@ function redirectIfLoggedIn() {
     if (isset($_SESSION['user_id'])) {
         $role = $_SESSION['role'];
         if ($role === 'superadmin') {
-            header("Location: " . BASE_URL . "views/dashboard/superadmin.php");
+            header("Location: ../views/dashboard/superadmin.php");
         } elseif ($role === 'admin') {
-            header("Location: " . BASE_URL . "views/dashboard/admin.php");
+            header("Location: ../views/dashboard/admin.php");
         } else {
-            header("Location: " . BASE_URL . "views/dashboard/staff.php");
+            header("Location: ../views/dashboard/staff.php");
         }
         exit;
     }
