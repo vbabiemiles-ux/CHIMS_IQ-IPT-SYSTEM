@@ -7,7 +7,7 @@ requireLogin();
 // Check CSRF
 if (!csrf_check()) {
     $_SESSION['error'] = 'Invalid CSRF token.';
-    header("Location: " . BASE_URL . "views/products/index.php");
+    header("Location: ../../views/products/index.php");
     exit;
 }
 
@@ -15,7 +15,7 @@ if (!csrf_check()) {
 $userRole = $_SESSION['role'] ?? '';
 if (!in_array($userRole, ['admin', 'superadmin'], true)) {
     $_SESSION['error'] = 'You do not have permission to unlink suppliers.';
-    header("Location: " . BASE_URL . "views/products/index.php");
+    header("Location: ../../views/products/index.php");
     exit;
 }
 
@@ -25,7 +25,7 @@ $supplierId = $_POST['supplier_id'] ?? null;
 
 if (!$productId || !$supplierId) {
     $_SESSION['error'] = 'Product ID and supplier ID are required.';
-    header("Location: " . BASE_URL . "views/products/index.php");
+    header("Location: ../../views/products/index.php");
     exit;
 }
 
@@ -40,5 +40,5 @@ if ($result['status']) {
     $_SESSION['error'] = $result['message'];
 }
 
-header("Location: " . BASE_URL . "views/products/index.php");
+header("Location: ../../views/products/index.php");
 exit;

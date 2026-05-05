@@ -1,4 +1,5 @@
-<?php $user = currentUser(); global $db;?>
+<?php $user = currentUser();
+global $db; ?>
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
         <div class="brand-name">CHIMS-IQ</div>
@@ -6,30 +7,30 @@
     </div>
     <nav class="sidebar-nav">
         <div class="nav-section-label">Main</div>
-        <a href="<?= BASE_URL ?>views/dashboard/staff.php" class="nav-item <?= basename($_SERVER['PHP_SELF']) === 'staff.php' ? 'active' : '' ?>">
+        <a href="../views/dashboard/staff.php" class="nav-item <?= basename($_SERVER['PHP_SELF']) === 'staff.php' ? 'active' : '' ?>">
             <span class="nav-icon">📊</span> Dashboard
         </a>
 
         <div class="nav-section-label">Management</div>
-        <a href="<?= BASE_URL ?>views/products/index.php"
+        <a href="../views/products/index.php"
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'products') !== false ? 'active' : '' ?>">
             <span class="nav-icon">📦</span> Products
         </a>
-        <a href="<?= BASE_URL ?>views/stocks/index.php"
+        <a href="../views/stocks/index.php"
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'stocks') !== false && basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : '' ?>">
             <span class="nav-icon">🗃️</span> Stock
         </a>
-        <a href="<?= BASE_URL ?>views/stocks/staff_flag.php"
+        <a href="../views/stocks/staff_flag.php"
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'staff_flag') !== false ? 'active' : '' ?>">
             <span class="nav-icon">🚩</span> Flag Items
         </a>
 
         <div class="nav-section-label">Reports</div>
-        <a href="<?= BASE_URL ?>views/stocks/index.php"
+        <a href="../views/stocks/index.php"
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'stocks') !== false && basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : '' ?>">
             <span class="nav-icon">📈</span> Stock Report
         </a>
-        <a href="<?= BASE_URL ?>views/purchaseorder/index.php"
+        <a href="../views/purchaseorder/index.php"
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'purchaseorder') !== false ? 'active' : '' ?>">
             <span class="nav-icon">📑</span> PO History
         </a>
@@ -42,6 +43,6 @@
                 <div class="user-info-role"><?= htmlspecialchars($user['role']) ?></div>
             </div>
         </div>
-        <a href="<?= BASE_URL ?>controllers/auth/logout.php" class="btn-logout">Sign Out</a>
+        <a href="../../controllers/auth/logout.php" class="btn-logout">Sign Out</a>
     </div>
 </aside>

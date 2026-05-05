@@ -10,7 +10,7 @@ $users = $user->read();
 var_dump($users);
 exit; */
 ?>
-<script src="/views/users/user-js.js"></script>
+<script src="user-js.js"></script>
 
 <h4>List of Registrations</h4>
 
@@ -26,7 +26,7 @@ exit; */
         </thead>
 
         <tbody>
-            <?php 
+            <?php
             $count = 1;
             foreach ($users as $row) { ?>
                 <tr>
@@ -41,7 +41,7 @@ exit; */
                             data-id="<?= encryptId($row['id']) ?>">
                             Edit
                         </a>
-                        <a href="javascript:void(0)" class="btn btn-danger btn-sm deleteUserBtn" 
+                        <a href="javascript:void(0)" class="btn btn-danger btn-sm deleteUserBtn"
                             data-id="<?= encryptId($row['id']) ?>">
                             Delete
                         </a>
@@ -58,7 +58,7 @@ exit; */
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <form action="<?= BASE_URL ?>controllers/users/update.php" method="POST">
+            <form action="../../controllers/users/update.php" method="POST">
 
                 <div class="modal-header">
                     <h5 class="modal-title">Edit User</h5>

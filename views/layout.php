@@ -6,7 +6,7 @@ $content = $content ?? '';
 <head>
     <title><?= $title ?? 'My Project' ?></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
+    <link rel="stylesheet" href="<../../assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -37,8 +37,8 @@ $content = $content ?? '';
     <a class="navbar-brand" href="<?= BASE_URL ?>">My Project</a>
     <div>
         <a class="btn btn-light btn-sm" href="<?= BASE_URL ?>">Home</a>
-        <a class="btn btn-success btn-sm" href="<?= BASE_URL ?>views/users/create.php">Create User</a>
-        <a class="btn btn-secondary btn-sm" href="<?= BASE_URL ?>views/users/index.php">User List</a>
+        <a class="btn btn-success btn-sm" href="views/users/create.php">Create User</a>
+        <a class="btn btn-secondary btn-sm" href="views/users/index.php">User List</a>
     </div>
 </nav>
 

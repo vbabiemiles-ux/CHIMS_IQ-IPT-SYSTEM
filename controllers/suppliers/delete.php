@@ -7,7 +7,7 @@ requireRole('admin');
 // Check CSRF
 if (!csrf_check()) {
     $_SESSION['error'] = 'Invalid CSRF token.';
-    header("Location: " . BASE_URL . "views/suppliers/index.php");
+    header("Location: ../../views/suppliers/index.php");
     exit;
 }
 
@@ -15,7 +15,7 @@ if (!csrf_check()) {
 $supplierId = $_POST['id'] ?? null;
 if (!$supplierId) {
     $_SESSION['error'] = 'Supplier ID is required.';
-    header("Location: " . BASE_URL . "views/suppliers/index.php");
+    header("Location: ../../views/suppliers/index.php");
     exit;
 }
 
@@ -30,5 +30,5 @@ if ($result['status']) {
     $_SESSION['error'] = $result['message'];
 }
 
-header("Location: " . BASE_URL . "views/suppliers/index.php");
+header("Location: ../../views/suppliers/index.php");
 exit;

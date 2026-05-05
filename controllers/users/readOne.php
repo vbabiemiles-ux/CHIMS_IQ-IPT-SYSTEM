@@ -1,4 +1,5 @@
 <?php
+global $db;
 require_once '../../autoload.php';
 $user = new User($db);
 

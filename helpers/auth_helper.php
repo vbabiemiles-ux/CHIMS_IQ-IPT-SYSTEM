@@ -6,7 +6,7 @@
  */
 function requireLogin() {
     if (!isset($_SESSION['user_id'])) {
-        header("Location: " . BASE_URL . "views/auth/login.php");
+        header("Location: ../views/auth/login.php");
         exit;
     }
 }

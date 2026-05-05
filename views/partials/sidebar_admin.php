@@ -7,26 +7,26 @@ global $db; ?>
     </div>
     <nav class="sidebar-nav">
         <div class="nav-section-label">Main</div>
-        <a href="<?= BASE_URL ?>views/dashboard/admin.php" class="nav-item <?= basename($_SERVER['PHP_SELF']) === 'admin.php' ? 'active' : '' ?>">
+        <a href="../views/dashboard/admin.php" class="nav-item <?= basename($_SERVER['PHP_SELF']) === 'admin.php' ? 'active' : '' ?>">
             <span class="nav-icon">📊</span> Dashboard
         </a>
 
         <div class="nav-section-label">Inventory</div>
-        <a href="<?= BASE_URL ?>views/products/index.php"
+        <a href="../views/products/index.php"
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'products') !== false ? 'active' : '' ?>">
             <span class="nav-icon">📦</span> Products
         </a>
-        <a href="<?= BASE_URL ?>views/stocks/index.php"
+        <a href="../views/stocks/index.php"
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'stocks') !== false && basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : '' ?>">
             <span class="nav-icon">🗃️</span> Stock
         </a>
-        <a href="<?= BASE_URL ?>views/categories/index.php"
+        <a href="../views/categories/index.php"
             class="nav-item <?= basename($_SERVER['PHP_SELF']) === 'index.php' && strpos($_SERVER['PHP_SELF'], 'categories') !== false ? 'active' : '' ?>">
             <span class="nav-icon">🏷️</span> Categories
         </a>
 
         <div class="nav-section-label">Operations</div>
-        <a href="<?= BASE_URL ?>views/purchaseorder/index.php"
+        <a href="../views/purchaseorder/index.php"
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'purchaseorder') !== false ? 'active' : '' ?>">
             <span class="nav-icon">🛒</span> Purchase Orders
             <?php
@@ -35,21 +35,21 @@ global $db; ?>
                 <span class="nav-badge"><?= $pendingPOs ?></span>
             <?php endif; ?>
         </a>
-        <a href="<?= BASE_URL ?>views/suppliers/index.php"
+        <a href="../views/suppliers/index.php"
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'suppliers') !== false ? 'active' : '' ?>">
             <span class="nav-icon">🏭</span> Suppliers
         </a>
 
         <div class="nav-section-label">Store</div>
-        <a href="<?= BASE_URL ?>views/dashboard/admin_profile.php" class="nav-item <?= basename($_SERVER['PHP_SELF']) === 'admin_profile.php' ? 'active' : '' ?>">
+        <a href="../views/dashboard/admin_profile.php" class="nav-item <?= basename($_SERVER['PHP_SELF']) === 'admin_profile.php' ? 'active' : '' ?>">
             <span class="nav-icon">🏬</span> Store Details
         </a>
-        <a href="<?= BASE_URL ?>views/dashboard/admin_staff.php" class="nav-item <?= basename($_SERVER['PHP_SELF']) === 'admin_staff.php' ? 'active' : '' ?>">
+        <a href="../views/dashboard/admin_staff.php" class="nav-item <?= basename($_SERVER['PHP_SELF']) === 'admin_staff.php' ? 'active' : '' ?>">
             <span class="nav-icon">👤</span> Staff
         </a>
 
         <div class="nav-section-label">Reports</div>
-        <a href="<?= BASE_URL ?>views/stocks/flag.php"
+        <a href="../views/stocks/flag.php"
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'stocks') !== false && strpos($_SERVER['PHP_SELF'], 'flag') !== false ? 'active' : '' ?>">
             <span class="nav-icon">🚩</span> Staff Flags
             <?php
@@ -59,11 +59,11 @@ global $db; ?>
                 <span class="nav-badge"><?= $flagCount ?></span>
             <?php endif; ?>
         </a>
-        <a href="<?= BASE_URL ?>views/reports/deletion_log.php"
+        <a href="../views/reports/deletion_log.php"
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'deletion_log') !== false ? 'active' : '' ?>">
             <span class="nav-icon">🗑️</span> Deletion Log
         </a>
-        <a href="<?= BASE_URL ?>views/reports/backups.php"
+        <a href="../views/reports/backups.php"
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'backups') !== false ? 'active' : '' ?>">
             <span class="nav-icon">💾</span> Backups
         </a>
@@ -76,6 +76,6 @@ global $db; ?>
                 <div class="user-info-role"><?= htmlspecialchars($user['role']) ?></div>
             </div>
         </div>
-        <a href="<?= BASE_URL ?>controllers/auth/logout.php" class="btn-logout">Sign Out</a>
+        <a href="../../controllers/auth/logout.php" class="btn-logout">Sign Out</a>
     </div>
 </aside>

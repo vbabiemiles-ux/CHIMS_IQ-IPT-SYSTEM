@@ -7,7 +7,7 @@ requireLogin();
 // Check CSRF
 if (!csrf_check()) {
     $_SESSION['error'] = 'Invalid CSRF token.';
-    header("Location: " . BASE_URL . "views/products/index.php");
+    header("Location: ../../views/products/index.php");
     exit;
 }
 
@@ -15,7 +15,7 @@ if (!csrf_check()) {
 $userRole = $_SESSION['role'] ?? '';
 if (!in_array($userRole, ['admin', 'superadmin'], true)) {
     $_SESSION['error'] = 'You do not have permission to create products.';
-    header("Location: " . BASE_URL . "views/products/index.php");
+    header("Location: ../../views/products/index.php");
     exit;
 }
 
@@ -28,7 +28,7 @@ $brand = trim($_POST['brand'] ?? '');
 
 if (!$categoryId || !$productName) {
     $_SESSION['error'] = 'Category and product name are required.';
-    header("Location: " . BASE_URL . "views/products/index.php");
+    header("Location: ../../views/products/index.php");
     exit;
 }
 
@@ -43,5 +43,5 @@ if ($result['status']) {
     $_SESSION['error'] = $result['message'];
 }
 
-header("Location: " . BASE_URL . "views/products/index.php");
+header("Location: ../../views/products/index.php");
 exit;
