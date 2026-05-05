@@ -7,14 +7,14 @@ $user = currentUser();
 $poObj = new PurchaseOrder($db);
 
 if (!isset($_GET['id'])) {
-    header("Location: /views/purchase_orders/index.php");
+    header("Location: " . BASE_URL . "views/purchaseorder/index.php");
     exit;
 }
 
 $order = $poObj->getById((int)$_GET['id']);
 if (!$order) {
     $_SESSION['error'] = 'Purchase Order not found or access denied.';
-    header("Location: /views/purchase_orders/index.php");
+    header("Location: " . BASE_URL . "views/purchaseorder/index.php");
     exit;
 }
 
@@ -31,7 +31,7 @@ $bdg = $st === 'received' ? 'gd' : ($st === 'cancelled' ? 'cr' : 'lo');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PO #<?= str_pad($order['id'], 5, '0', STR_PAD_LEFT) ?> — CHIMS-IQ</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
     <style>
         .po-header-grid {
             display: grid;
@@ -185,7 +185,7 @@ $bdg = $st === 'received' ? 'gd' : ($st === 'cancelled' ? 'cr' : 'lo');
 
             <!-- Back -->
             <div style="margin-top:8px;">
-                <a href="/views/purchase_orders/index.php" class="btn-sm out">
+                <a href="<?= BASE_URL ?>views/purchaseorder/index.php" class="btn-sm out">
                     ← Back to Purchase Orders
                 </a>
             </div>

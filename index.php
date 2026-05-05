@@ -1,4 +1,10 @@
-<?php require_once 'autoload.php'; redirectIfLoggedIn(); ?>
+<?php
+require_once __DIR__ . '/autoload.php';
+if (!function_exists('redirectIfLoggedIn')) {
+    require_once __DIR__ . '/helpers/auth_helper.php';
+}
+redirectIfLoggedIn();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

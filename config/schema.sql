@@ -1,10 +1,11 @@
-CREATE DATABASE IF NOT EXISTS integrative_db;
-USE integrative_db;
+CREATE DATABASE IF NOT EXISTS db_chims_iq;
+USE db_chims_iq;
 
 -- Core tables
 CREATE TABLE IF NOT EXISTS stores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
+    address VARCHAR(500) NULL,
     admin_user_id INT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;

@@ -1,15 +1,25 @@
 <?php
-global $db;
 require_once '../../autoload.php';
-requireRole('admin');
+requireLogin();
+
+$userRole = $_SESSION['role'] ?? '';
+if (!in_array($userRole, ['admin', 'superadmin', 'staff'], true)) {
+    header('Location: ' . BASE_URL . 'views/auth/login.php');
+    exit;
+}
 
 $user    = currentUser();
+$canEdit = in_array($userRole, ['admin', 'superadmin'], true);
+global $db;
 $stock   = new Stock($db);
 $message = '';
 $msgType = 'success';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!csrf_check()) {
+    if (!$canEdit) {
+        $message = 'You have read-only access to stock.';
+        $msgType = 'error';
+    } elseif (!csrf_check()) {
         $message = 'Invalid CSRF token.';
         $msgType = 'error';
     } elseif (isset($_POST['update_stock'])) {
@@ -35,7 +45,7 @@ $hasCritical = (int)($summary['critical'] ?? 0) > 0;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock — CHIMS-IQ</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
     <style>
         .stock-summary {
             display: grid;
@@ -88,7 +98,11 @@ $hasCritical = (int)($summary['critical'] ?? 0) > 0;
 </head>
 <body>
 <div class="app-layout">
-    <?php require_once '../partials/sidebar_admin.php'; ?>
+    <?php
+    require_once $userRole === 'staff'
+        ? '../partials/sidebar_staff.php'
+        : '../partials/sidebar_admin.php';
+    ?>
 
     <div class="main-content">
         <div class="topbar">
@@ -98,7 +112,7 @@ $hasCritical = (int)($summary['critical'] ?? 0) > 0;
             </div>
             <div class="topbar-right">
                 <?= htmlspecialchars($user['full_name']) ?> &nbsp;·&nbsp;
-                <span class="rbdg admin">ADMIN</span>
+                <span class="rbdg admin"><?= strtoupper(htmlspecialchars($userRole)) ?></span>
             </div>
         </div>
 
@@ -121,10 +135,16 @@ $hasCritical = (int)($summary['critical'] ?? 0) > 0;
                     These products are at zero stock. Restock immediately or
                     generate a Purchase Order.
                 </p>
-                <a href="/views/purchase_orders/index.php" class="btn-sm"
+                <?php if ($canEdit): ?>
+                <a href="<?= BASE_URL ?>views/purchaseorder/index.php" class="btn-sm"
                    style="background:#fff; color:#7f1d1d; font-weight:700;">
                     Go to Purchase Orders →
                 </a>
+                <?php else: ?>
+                <p style="font-size:.85rem; opacity:.9; margin:0;">
+                    Ask an admin to create a purchase order.
+                </p>
+                <?php endif; ?>
             </div>
             <?php endif; ?>
 
@@ -153,7 +173,7 @@ $hasCritical = (int)($summary['critical'] ?? 0) > 0;
                 <div style="display:flex; justify-content:space-between;
                             align-items:center; margin-bottom:16px;">
                     <h3 style="margin-bottom:0;">Stock Levels & Health Status</h3>
-                    <a href="/views/products/index.php" class="btn-sm out">
+                    <a href="<?= BASE_URL ?>views/products/index.php" class="btn-sm out">
                         + Add Product
                     </a>
                 </div>
@@ -174,7 +194,7 @@ $hasCritical = (int)($summary['critical'] ?? 0) > 0;
                                 <th>Health</th>
                                 <th style="text-align:center;">Current Qty</th>
                                 <th style="text-align:center;">Min Level</th>
-                                <th>Update Stock</th>
+                                <th><?= $canEdit ? 'Update Stock' : 'Actions' ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -205,6 +225,7 @@ $hasCritical = (int)($summary['critical'] ?? 0) > 0;
                                     <?= $item['min_stock_level'] ?>
                                 </td>
                                 <td>
+                                    <?php if ($canEdit): ?>
                                     <form method="POST" class="inline-form">
                                         <?= csrf_field() ?>
                                         <input type="hidden" name="product_id"
@@ -224,6 +245,9 @@ $hasCritical = (int)($summary['critical'] ?? 0) > 0;
                                         <button type="submit" name="update_stock"
                                                 class="btn-sm pri">Save</button>
                                     </form>
+                                    <?php else: ?>
+                                    <span style="color:var(--text-muted); font-size:.8rem;">View only</span>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                             <?php endforeach; ?>

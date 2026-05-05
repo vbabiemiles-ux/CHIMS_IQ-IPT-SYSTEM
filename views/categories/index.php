@@ -40,7 +40,7 @@ $categories = $category->getAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Categories — CHIMS-IQ</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
 </head>
 <body>
 <div class="app-layout">
@@ -90,7 +90,7 @@ $categories = $category->getAll();
                     <div style="display:flex; gap:10px; margin-top:8px;">
                         <?php if ($editCategory): ?>
                             <button type="submit" name="update_category" class="btn-sm pri">Update Category</button>
-                            <a href="/views/categories/index.php" class="btn-sm out">Cancel</a>
+                            <a href="<?= BASE_URL ?>views/categories/index.php" class="btn-sm out">Cancel</a>
                         <?php else: ?>
                             <button type="submit" name="create_category" class="btn-sm pri">Add Category</button>
                         <?php endif; ?>

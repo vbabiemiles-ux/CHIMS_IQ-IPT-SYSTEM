@@ -4,7 +4,7 @@ require_once '../../autoload.php';
 redirectIfLoggedIn();
 
 $role = $_GET['role'] ?? 'admin';
-$role = in_array($role, ['admin','staff']) ? $role : 'admin';
+$role = in_array($role, ['admin', 'staff'], true) ? $role : 'admin';
 
 $error = '';
 
@@ -21,14 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$result['status']) {
             $error = $result['message'];
         } else {
-            // Redirect based on role
             $userRole = $result['role'];
             if ($userRole === 'superadmin') {
-                header("Location: " . BASE_URL . "views/dashboard/superadmin.php");
+                header('Location: ' . BASE_URL . 'views/dashboard/superadmin.php');
             } elseif ($userRole === 'admin') {
-                header("Location: " . BASE_URL . "views/dashboard/admin.php");
+                header('Location: ' . BASE_URL . 'views/dashboard/admin.php');
             } else {
-                header("Location: " . BASE_URL . "views/dashboard/staff.php");
+                header('Location: ' . BASE_URL . 'views/dashboard/staff.php');
             }
             exit;
         }
@@ -44,63 +43,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
 </head>
 <body>
-<div class="auth-page">
-    <div class="auth-card">
-        <div class="auth-logo">CHIMS-IQ</div>
-        <div class="auth-logo-sub">Smart Hardware IMS V3.0</div>
+<main class="auth-page">
+    <article class="auth-card">
+        <header class="auth-card-header">
+            <h1 class="auth-logo">CHIMS-IQ</h1>
+            <p class="auth-logo-sub">Smart Hardware IMS V3.0</p>
+        </header>
 
-        <!-- Tabs -->
-        <div class="auth-tabs">
-            <button class="auth-tab active">Sign In</button>
+        <nav class="auth-tabs" aria-label="Account">
+            <a href="<?= BASE_URL ?>views/auth/login.php?role=<?= htmlspecialchars($role) ?>"
+               class="auth-tab active"
+               aria-current="page">Sign In</a>
             <?php if ($role === 'admin'): ?>
-            <a href="/views/auth/register.php" class="auth-tab" style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Register</a>
+                <a href="<?= BASE_URL ?>views/auth/register.php" class="auth-tab">Register</a>
             <?php else: ?>
-            <button class="auth-tab" style="opacity:.4; cursor:not-allowed;" title="Contact your admin to register">Register</button>
+                <span class="auth-tab auth-tab--disabled" title="Contact your admin to register" aria-disabled="true">Register</span>
             <?php endif; ?>
-        </div>
+        </nav>
 
         <?php if ($error): ?>
-        <div class="alert-msg error"><?= htmlspecialchars($error) ?></div>
+            <div class="alert-msg error" role="alert"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
-        <form method="POST">
-            <div class="form-group">
-                <label class="form-label">Email Address</label>
-                <input type="email" name="email" class="form-input"
-                       placeholder="Enter your email"
-                       value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Password</label>
-                <div class="input-wrap">
-                    <input type="password" name="password" id="pw" class="form-input"
-                           placeholder="Enter your password" required>
-                    <button type="button" class="toggle-pw" onclick="togglePw()">👁</button>
+        <section class="auth-section" aria-labelledby="signin-heading">
+            <h2 id="signin-heading" class="visually-hidden">Sign in with email</h2>
+            <form method="post" class="auth-form">
+                <div class="form-group">
+                    <label class="form-label" for="login-email">Email address</label>
+                    <input id="login-email" type="email" name="email" class="form-input"
+                           placeholder="Enter your email"
+                           value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required autocomplete="email">
                 </div>
-            </div>
-            <button type="submit" class="btn-submit">Sign In</button>
-        </form>
-
-        <div class="auth-divider">or</div>
+                <div class="form-group">
+                    <label class="form-label" for="login-password">Password</label>
+                    <div class="input-wrap">
+                        <input id="login-password" type="password" name="password" class="form-input"
+                               placeholder="Enter your password" required autocomplete="current-password">
+                        <button type="button" class="toggle-pw" aria-label="Show or hide password" onclick="togglePw('login-password')">👁</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">Sign In</button>
+            </form>
+        </section>
 
         <?php if ($role === 'admin'): ?>
-        <div class="auth-switch">
-            New store owner? <a href="/views/auth/register.php">Register your store →</a>
-        </div>
-        <?php else: ?>
-        <div class="auth-switch">
-            <a href="/index.php">← Back to home</a>
-        </div>
+            <p class="auth-divider" role="separator"><span>or</span></p>
+            <section class="auth-section auth-section--compact" aria-labelledby="register-cta-heading">
+                <h2 id="register-cta-heading" class="visually-hidden">New store</h2>
+                <p class="auth-switch">
+                    New store owner?
+                    <a href="<?= BASE_URL ?>views/auth/register.php">Register your store →</a>
+                </p>
+            </section>
         <?php endif; ?>
 
-        <div style="margin-top:24px; text-align:center;">
-            <a href="/index.php" style="font-size:.78rem; color:var(--text-muted);">← Back to home</a>
-        </div>
-    </div>
-</div>
+        <footer class="auth-card-footer">
+            <nav aria-label="Site">
+                <a href="<?= BASE_URL ?>index.php" class="auth-link-home">← Back to home</a>
+            </nav>
+        </footer>
+    </article>
+</main>
 <script>
-function togglePw(){
-    var p = document.getElementById('pw');
+function togglePw(id) {
+    var p = document.getElementById(id);
+    if (!p) return;
     p.type = p.type === 'password' ? 'text' : 'password';
 }
 </script>

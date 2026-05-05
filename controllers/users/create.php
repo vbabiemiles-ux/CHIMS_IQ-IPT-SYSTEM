@@ -1,10 +1,11 @@
 <?php
+global $db;
 require_once '../../autoload.php';
 
 //check CSRF
 if (!csrf_check()) {
     $_SESSION['error'] = 'Invalid CSRF';
-    header("Location: /views/users/create.php");
+    header("Location: " . BASE_URL . "views/users/create.php");
     exit;
 }
 
@@ -23,5 +24,5 @@ if ($result === true) {
     $_SESSION['error'] = $result;
 }
 
-header("Location: /views/users/index.php");
+header("Location: " . BASE_URL . "views/users/index.php");
 exit;

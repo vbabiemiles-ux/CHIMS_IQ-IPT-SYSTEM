@@ -1,45 +1,46 @@
 <?php
-global $db;
 require_once '../../autoload.php';
 requireRole('admin');
 $user = currentUser();
+global $db;
 
 $error   = '';
 $success = '';
 
-// Add staff
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_staff'])) {
-    $staffName  = trim($_POST['staff_name'] ?? '');
-    $staffEmail = trim($_POST['staff_email'] ?? '');
-    $staffPass  = $_POST['staff_password'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!csrf_check()) {
+        $error = 'Invalid request. Please try again.';
+    } elseif (isset($_POST['add_staff'])) {
+        $staffName  = trim($_POST['staff_name'] ?? '');
+        $staffEmail = trim($_POST['staff_email'] ?? '');
+        $staffPass  = $_POST['staff_password'] ?? '';
 
-    if (!$staffName || !$staffEmail || !$staffPass) {
-        $error = 'All fields are required.';
-    } elseif (strlen($staffPass) < 6) {
-        $error = 'Password must be at least 6 characters.';
-    } else {
-        // Check email unique
-        $stmt = $db->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
-        $stmt->execute([$staffEmail]);
-        if ($stmt->fetch()) {
-            $error = 'Email already in use.';
+        if (!$staffName || !$staffEmail || !$staffPass) {
+            $error = 'All fields are required.';
+        } elseif (strlen($staffPass) < 6) {
+            $error = 'Password must be at least 6 characters.';
         } else {
-            $hashed = password_hash($staffPass, PASSWORD_BCRYPT);
-            $stmt = $db->prepare(
-                "INSERT INTO users (store_id, full_name, email, password, role) VALUES (?,?,?,?,'staff')"
-            );
-            $stmt->execute([$user['store_id'], $staffName, $staffEmail, $hashed]);
-            $success = 'Staff member added successfully.';
+            $stmt = $db->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+            $stmt->execute([$staffEmail]);
+            if ($stmt->fetch()) {
+                $error = 'Email already in use.';
+            } else {
+                $hashed = password_hash($staffPass, PASSWORD_BCRYPT);
+                $stmt = $db->prepare(
+                    "INSERT INTO users (store_id, full_name, email, password, role) VALUES (?,?,?,?,'staff')"
+                );
+                $stmt->execute([$user['store_id'], $staffName, $staffEmail, $hashed]);
+                $success = 'Staff member added successfully.';
+            }
         }
+    } elseif (isset($_POST['delete_staff'])) {
+        $deleteId = (int)($_POST['staff_id'] ?? 0);
+        $stmt = $db->prepare(
+            "UPDATE users SET deleted_at = NOW() WHERE id = ? AND store_id = ? AND role = 'staff'"
+        );
+        $stmt->execute([$deleteId, $user['store_id']]);
+        $success = 'Staff member removed.';
     }
-}
-
-// Delete staff
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_staff'])) {
-    $deleteId = (int)$_POST['staff_id'];
-    $stmt = $db->prepare("UPDATE users SET deleted_at = NOW() WHERE id = ? AND store_id = ? AND role = 'staff'");
-    $stmt->execute([$deleteId, $user['store_id']]);
-    $success = 'Staff member removed.';
 }
 
 // Fetch staff list
@@ -56,7 +57,7 @@ $staffList = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Management — CHIMS-IQ</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
     <style>
         .staff-layout { display: grid; grid-template-columns: 340px 1fr; gap: 24px; }
         .section-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
@@ -91,6 +92,7 @@ $staffList = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="section-card" style="align-self:start;">
                     <h3>➕ Add Staff Member</h3>
                     <form method="POST">
+                        <?= csrf_field() ?>
                         <div class="form-group">
                             <label class="form-label">Full Name</label>
                             <input type="text" name="staff_name" class="form-input" placeholder="e.g. Staff Name" required>
@@ -101,9 +103,8 @@ $staffList = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                         <div class="form-group">
                             <label class="form-label">Password</label>
-                            <input type="text" name="staff_password" class="form-input"
-                                   placeholder="Min 6 characters"
-                                   value="<?= htmlspecialchars($user['store_name'] ?? '') ?>" required>
+                            <input type="password" name="staff_password" class="form-input"
+                                   placeholder="Min 6 characters" required>
                             <p style="font-size:.72rem; color:var(--text-muted); margin-top:5px;">Default: store name. Staff can change later.</p>
                         </div>
                         <button type="submit" name="add_staff" class="btn-submit">Add Staff</button>
@@ -141,6 +142,7 @@ $staffList = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <td><?= date('M d, Y', strtotime($s['created_at'])) ?></td>
                                     <td>
                                         <form method="POST" onsubmit="return confirm('Remove this staff member?')">
+                                            <?= csrf_field() ?>
                                             <input type="hidden" name="staff_id" value="<?= $s['id'] ?>">
                                             <button type="submit" name="delete_staff" class="btn-del">Remove</button>
                                         </form>

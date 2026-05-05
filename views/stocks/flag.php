@@ -27,7 +27,7 @@ $flags = $flagObj->getAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Flags — CHIMS-IQ</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
     <style>
         .flag-card {
             background: var(--bg-card);
@@ -107,7 +107,7 @@ $flags = $flagObj->getAll();
                         Staff-reported stock issues that need your attention.
                     </p>
                 </div>
-                <a href="/views/stock/index.php" class="btn-sm out">← Stock</a>
+                <a href="<?= BASE_URL ?>views/stocks/index.php" class="btn-sm out">← Stock</a>
             </div>
 
             <?php if (empty($flags)): ?>
@@ -149,7 +149,7 @@ $flags = $flagObj->getAll();
                     </div>
 
                     <div class="flag-actions">
-                        <a href="/views/stock/index.php" class="btn-sm out">
+                        <a href="<?= BASE_URL ?>views/stocks/index.php" class="btn-sm out">
                             Update Stock
                         </a>
                         <form method="POST"

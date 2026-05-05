@@ -1,8 +1,8 @@
 <?php
-global $db;
 require_once '../../autoload.php';
 requireRole('admin');
 $user = currentUser();
+global $db;
 
 // Fetch store details
 $storeData = [];
@@ -16,15 +16,19 @@ $success = '';
 $error   = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_store'])) {
-    $storeName = trim($_POST['store_name'] ?? '');
-    if (!$storeName) {
-        $error = 'Store name cannot be empty.';
+    if (!csrf_check()) {
+        $error = 'Invalid request. Please try again.';
     } else {
-        $stmt = $db->prepare("UPDATE stores SET name = ? WHERE id = ?");
-        $stmt->execute([$storeName, $user['store_id']]);
-        $_SESSION['store_name'] = $storeName;
-        $success = 'Store details updated.';
-        $storeData['name'] = $storeName;
+        $storeName = trim($_POST['store_name'] ?? '');
+        if (!$storeName) {
+            $error = 'Store name cannot be empty.';
+        } else {
+            $stmt = $db->prepare("UPDATE stores SET name = ? WHERE id = ?");
+            $stmt->execute([$storeName, $user['store_id']]);
+            $_SESSION['store_name'] = $storeName;
+            $success = 'Store details updated.';
+            $storeData['name'] = $storeName;
+        }
     }
 }
 ?>
@@ -34,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_store'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Store Details — CHIMS-IQ</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
     <style>
         .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 800px; }
         .section-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
@@ -74,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_store'])) {
                 <div class="section-card">
                     <h3>🏬 Store Information</h3>
                     <form method="POST">
+                        <?= csrf_field() ?>
                         <div class="form-group">
                             <label class="form-label">Store Name</label>
                             <input type="text" name="store_name" class="form-input"

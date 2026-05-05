@@ -11,22 +11,26 @@
         </a>
 
         <div class="nav-section-label">Management</div>
-        <a href="#" class="nav-item">
+        <a href="<?= BASE_URL ?>views/products/index.php"
+            class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'products') !== false ? 'active' : '' ?>">
             <span class="nav-icon">📦</span> Products
         </a>
-        <a href="#" class="nav-item">
+        <a href="<?= BASE_URL ?>views/stocks/index.php"
+            class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'stocks') !== false && basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : '' ?>">
             <span class="nav-icon">🗃️</span> Stock
         </a>
-        <a href="<?= BASE_URL ?>views/stock/staff_flag.php"
+        <a href="<?= BASE_URL ?>views/stocks/staff_flag.php"
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'staff_flag') !== false ? 'active' : '' ?>">
             <span class="nav-icon">🚩</span> Flag Items
         </a>
 
         <div class="nav-section-label">Reports</div>
-        <a href="#" class="nav-item">
+        <a href="<?= BASE_URL ?>views/stocks/index.php"
+            class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'stocks') !== false && basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : '' ?>">
             <span class="nav-icon">📈</span> Stock Report
         </a>
-        <a href="#" class="nav-item">
+        <a href="<?= BASE_URL ?>views/purchaseorder/index.php"
+            class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'purchaseorder') !== false ? 'active' : '' ?>">
             <span class="nav-icon">📑</span> PO History
         </a>
     </nav>

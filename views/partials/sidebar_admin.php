@@ -16,8 +16,8 @@ global $db; ?>
             class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'products') !== false ? 'active' : '' ?>">
             <span class="nav-icon">📦</span> Products
         </a>
-        <a href="<?= BASE_URL ?>views/stock/index.php"
-            class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'stock') !== false ? 'active' : '' ?>">
+        <a href="<?= BASE_URL ?>views/stocks/index.php"
+            class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'stocks') !== false && basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : '' ?>">
             <span class="nav-icon">🗃️</span> Stock
         </a>
         <a href="<?= BASE_URL ?>views/categories/index.php"
@@ -26,8 +26,8 @@ global $db; ?>
         </a>
 
         <div class="nav-section-label">Operations</div>
-        <a href="<?= BASE_URL ?>views/purchase_orders/index.php"
-            class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'purchase_orders') !== false ? 'active' : '' ?>">
+        <a href="<?= BASE_URL ?>views/purchaseorder/index.php"
+            class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'purchaseorder') !== false ? 'active' : '' ?>">
             <span class="nav-icon">🛒</span> Purchase Orders
             <?php
             $pendingPOs = (new PurchaseOrder($db))->countByStatus('pending');
@@ -49,11 +49,8 @@ global $db; ?>
         </a>
 
         <div class="nav-section-label">Reports</div>
-        <a href="#" class="nav-item">
-            <span class="nav-icon">📈</span> Stock Report
-        </a>
-        <a href="<?= BASE_URL ?>views/stock/flag.php"
-            class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'flag') !== false ? 'active' : '' ?>">
+        <a href="<?= BASE_URL ?>views/stocks/flag.php"
+            class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'stocks') !== false && strpos($_SERVER['PHP_SELF'], 'flag') !== false ? 'active' : '' ?>">
             <span class="nav-icon">🚩</span> Staff Flags
             <?php
             // Live badge count
@@ -62,13 +59,12 @@ global $db; ?>
                 <span class="nav-badge"><?= $flagCount ?></span>
             <?php endif; ?>
         </a>
-        <a href="#" class="nav-item">
-            <span class="nav-icon">📑</span> PO History
-        </a>
-        <a href="#" class="nav-item">
+        <a href="<?= BASE_URL ?>views/reports/deletion_log.php"
+            class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'deletion_log') !== false ? 'active' : '' ?>">
             <span class="nav-icon">🗑️</span> Deletion Log
         </a>
-        <a href="#" class="nav-item">
+        <a href="<?= BASE_URL ?>views/reports/backups.php"
+            class="nav-item <?= strpos($_SERVER['PHP_SELF'], 'backups') !== false ? 'active' : '' ?>">
             <span class="nav-icon">💾</span> Backups
         </a>
     </nav>

@@ -51,7 +51,7 @@ $suppliers = $supplier->getAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suppliers — CHIMS-IQ</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
 </head>
 <body>
 <div class="app-layout">
@@ -117,7 +117,7 @@ $suppliers = $supplier->getAll();
                     <div style="display:flex; gap:10px; margin-top:8px;">
                         <?php if ($editSupplier): ?>
                             <button type="submit" name="update_supplier" class="btn-sm pri">Update Supplier</button>
-                            <a href="/views/suppliers/index.php" class="btn-sm out">Cancel</a>
+                            <a href="<?= BASE_URL ?>views/suppliers/index.php" class="btn-sm out">Cancel</a>
                         <?php else: ?>
                             <button type="submit" name="create_supplier" class="btn-sm pri">Add Supplier</button>
                         <?php endif; ?>

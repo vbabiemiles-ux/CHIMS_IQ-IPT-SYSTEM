@@ -71,7 +71,7 @@ $showForm = isset($_GET['new']) || $msgType === 'error';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purchase Orders — CHIMS-IQ</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
     <style>
         .po-stats {
             display: grid;
@@ -281,7 +281,7 @@ $showForm = isset($_GET['new']) || $msgType === 'error';
                     <div style="display:flex; gap:10px; margin-top:16px;">
                         <button type="submit" name="create_po"
                                 class="btn-sm pri">Create PO</button>
-                        <a href="/views/purchase_orders/index.php"
+                        <a href="<?= BASE_URL ?>views/purchaseorder/index.php"
                            class="btn-sm out">Cancel</a>
                     </div>
                 </form>
@@ -340,7 +340,7 @@ $showForm = isset($_GET['new']) || $msgType === 'error';
                             </td>
                             <td><span class="bdg <?= $bdg ?>"><?= ucfirst($st) ?></span></td>
                             <td>
-                                <a href="/views/purchase_orders/view.php?id=<?= $order['id'] ?>"
+                                <a href="<?= BASE_URL ?>views/purchaseorder/view.php?id=<?= $order['id'] ?>"
                                    class="btn-sm out">View</a>
 
                                 <?php if ($st === 'pending'): ?>

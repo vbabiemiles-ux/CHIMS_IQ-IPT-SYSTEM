@@ -37,80 +37,94 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Store — CHIMS-IQ</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
 </head>
 <body>
-<div class="auth-page">
-    <div class="auth-card">
-        <div class="auth-logo">CHIMS-IQ</div>
-        <div class="auth-logo-sub">Smart Hardware IMS V3.0</div>
+<main class="auth-page">
+    <article class="auth-card">
+        <header class="auth-card-header">
+            <h1 class="auth-logo">CHIMS-IQ</h1>
+            <p class="auth-logo-sub">Smart Hardware IMS V3.0</p>
+        </header>
 
-        <div class="auth-tabs">
-            <a href="/views/auth/login.php?role=admin" class="auth-tab" style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Sign In</a>
-            <button class="auth-tab active">Register</button>
-        </div>
+        <nav class="auth-tabs" aria-label="Account">
+            <a href="<?= BASE_URL ?>views/auth/login.php?role=admin" class="auth-tab">Sign In</a>
+            <a href="<?= BASE_URL ?>views/auth/register.php" class="auth-tab active" aria-current="page">Register</a>
+        </nav>
 
-        <div style="margin-bottom:24px;">
-            <h2 style="font-size:1.4rem;">Register <span style="color:var(--accent)">Store</span></h2>
-            <p style="color:var(--text-muted); font-size:.85rem; margin-top:4px;">Create your admin account and store</p>
-        </div>
+        <section class="auth-section auth-section--intro" aria-labelledby="register-heading">
+            <h2 id="register-heading" class="auth-register-title">Register <span class="auth-register-accent">store</span></h2>
+            <p class="auth-register-lead">Create your admin account and store.</p>
+        </section>
 
         <?php if ($error): ?>
-        <div class="alert-msg error"><?= htmlspecialchars($error) ?></div>
+            <div class="alert-msg error" role="alert"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
         <?php if ($success): ?>
-        <div class="alert-msg success"><?= htmlspecialchars($success) ?></div>
+            <div class="alert-msg success" role="status"><?= htmlspecialchars($success) ?></div>
         <?php endif; ?>
 
-        <form method="POST">
-            <div class="form-group">
-                <label class="form-label">Full Name *</label>
-                <input type="text" name="full_name" class="form-input"
-                       placeholder="Juan Dela Cruz"
-                       value="<?= htmlspecialchars($_POST['full_name'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Email Address *</label>
-                <input type="email" name="email" class="form-input"
-                       placeholder="juan@email.com"
-                       value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Store Name *</label>
-                <input type="text" name="store_name" class="form-input"
-                       placeholder="TechSource PH"
-                       value="<?= htmlspecialchars($_POST['store_name'] ?? '') ?>" required>
-                <p style="font-size:.75rem; color:var(--text-muted); margin-top:6px;">
-                    This will be the default password for staff you add later.
-                </p>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Password *</label>
-                <div class="input-wrap">
-                    <input type="password" name="password" id="pw1" class="form-input"
-                           placeholder="Min 8 characters" required>
-                    <button type="button" class="toggle-pw" onclick="togglePw('pw1')">👁</button>
+        <section class="auth-section" aria-labelledby="register-form-heading">
+            <h2 id="register-form-heading" class="visually-hidden">Registration form</h2>
+            <form method="post" class="auth-form">
+                <div class="form-group">
+                    <label class="form-label" for="reg-full-name">Full name</label>
+                    <input id="reg-full-name" type="text" name="full_name" class="form-input"
+                           placeholder="Juan Dela Cruz"
+                           value="<?= htmlspecialchars($_POST['full_name'] ?? '') ?>" required autocomplete="name">
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Confirm Password *</label>
-                <div class="input-wrap">
-                    <input type="password" name="confirm_password" id="pw2" class="form-input"
-                           placeholder="Repeat your password" required>
-                    <button type="button" class="toggle-pw" onclick="togglePw('pw2')">👁</button>
+                <div class="form-group">
+                    <label class="form-label" for="reg-email">Email address</label>
+                    <input id="reg-email" type="email" name="email" class="form-input"
+                           placeholder="juan@email.com"
+                           value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required autocomplete="email">
                 </div>
-            </div>
-            <button type="submit" class="btn-submit">Create Store Account</button>
-        </form>
+                <div class="form-group">
+                    <label class="form-label" for="reg-store">Store name</label>
+                    <input id="reg-store" type="text" name="store_name" class="form-input"
+                           placeholder="TechSource PH"
+                           value="<?= htmlspecialchars($_POST['store_name'] ?? '') ?>" required autocomplete="organization">
+                    <p class="form-hint">This will be the default password for staff you add later.</p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="pw1">Password</label>
+                    <div class="input-wrap">
+                        <input id="pw1" type="password" name="password" class="form-input"
+                               placeholder="Min 8 characters" required autocomplete="new-password" minlength="8">
+                        <button type="button" class="toggle-pw" aria-label="Show or hide password" onclick="togglePw('pw1')">👁</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="pw2">Confirm password</label>
+                    <div class="input-wrap">
+                        <input id="pw2" type="password" name="confirm_password" class="form-input"
+                               placeholder="Repeat your password" required autocomplete="new-password" minlength="8">
+                        <button type="button" class="toggle-pw" aria-label="Show or hide password" onclick="togglePw('pw2')">👁</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">Create store account</button>
+            </form>
+        </section>
 
-        <div class="auth-switch" style="margin-top:16px;">
-            Already have an account? <a href="/views/auth/login.php?role=admin">Sign in →</a>
-        </div>
-    </div>
-</div>
+        <section class="auth-section auth-section--compact" aria-labelledby="signin-cta-heading">
+            <h2 id="signin-cta-heading" class="visually-hidden">Already registered</h2>
+            <p class="auth-switch">
+                Already have an account?
+                <a href="<?= BASE_URL ?>views/auth/login.php?role=admin">Sign in →</a>
+            </p>
+        </section>
+
+        <footer class="auth-card-footer">
+            <nav aria-label="Site">
+                <a href="<?= BASE_URL ?>index.php" class="auth-link-home">← Back to home</a>
+            </nav>
+        </footer>
+    </article>
+</main>
 <script>
-function togglePw(id){
+function togglePw(id) {
     var p = document.getElementById(id);
+    if (!p) return;
     p.type = p.type === 'password' ? 'text' : 'password';
 }
 </script>

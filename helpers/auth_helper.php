@@ -16,7 +16,11 @@ function requireLogin() {
  */
 function requireRole($role) {
     requireLogin();
-    if ($_SESSION['role'] !== $role) {
+    $userRole = $_SESSION['role'] ?? '';
+    if ($userRole === 'superadmin') {
+        return;
+    }
+    if ($userRole !== $role) {
         header("Location: " . BASE_URL . "views/auth/login.php");
         exit;
     }

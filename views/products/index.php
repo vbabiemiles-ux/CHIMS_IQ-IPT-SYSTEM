@@ -1,6 +1,13 @@
 <?php
 require_once '../../autoload.php';
-requireRole('admin');
+requireLogin();
+
+$userRole = $_SESSION['role'] ?? '';
+if (!in_array($userRole, ['admin', 'superadmin', 'staff'], true)) {
+    header('Location: ' . BASE_URL . 'views/auth/login.php');
+    exit;
+}
+$canEdit = in_array($userRole, ['admin', 'superadmin'], true);
 
 global $db;
 $user            = currentUser();
@@ -13,7 +20,10 @@ $message = '';
 $msgType = 'success';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!csrf_check()) {
+    if (!$canEdit) {
+        $message = 'You have read-only access to products.';
+        $msgType = 'error';
+    } elseif (!csrf_check()) {
         $message = 'Invalid CSRF token.';
         $msgType = 'error';
     } elseif (isset($_POST['create_product'])) {
@@ -70,7 +80,7 @@ $categories = $category->getAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products — CHIMS-IQ</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
     <style>
         .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .health-dot {
@@ -94,7 +104,11 @@ $categories = $category->getAll();
 </head>
 <body>
 <div class="app-layout">
-    <?php require_once '../partials/sidebar_admin.php'; ?>
+    <?php
+    require_once $userRole === 'staff'
+        ? '../partials/sidebar_staff.php'
+        : '../partials/sidebar_admin.php';
+    ?>
 
     <div class="main-content">
         <div class="topbar">
@@ -104,7 +118,7 @@ $categories = $category->getAll();
             </div>
             <div class="topbar-right">
                 <?= htmlspecialchars($user['full_name']) ?> &nbsp;·&nbsp;
-                <span class="rbdg admin">ADMIN</span>
+                <span class="rbdg admin"><?= strtoupper(htmlspecialchars($userRole)) ?></span>
             </div>
         </div>
 
@@ -120,15 +134,16 @@ $categories = $category->getAll();
             <?php if (empty($categories)): ?>
             <div class="alert-msg error">
                 ⚠️ No categories found. 
-                <a href="/views/categories/index.php" style="color:var(--danger); text-decoration:underline;">
+                <a href="<?= BASE_URL ?>views/categories/index.php" style="color:var(--danger); text-decoration:underline;">
                     Add a category first
                 </a> before creating products.
             </div>
             <?php endif; ?>
 
-            <div style="display:grid; grid-template-columns: 420px 1fr; gap:24px; align-items:start;">
+            <div style="display:grid; grid-template-columns: <?= $canEdit ? '420px 1fr' : '1fr' ?>; gap:24px; align-items:start;">
 
                 <!-- LEFT: Add / Edit Form -->
+                <?php if ($canEdit): ?>
                 <div>
                     <div class="section-card">
                         <h3><?= $editProduct ? '✏️ Edit Product' : '➕ Add Product' ?></h3>
@@ -183,7 +198,7 @@ $categories = $category->getAll();
                             <div style="display:flex; gap:10px; margin-top:8px;">
                                 <?php if ($editProduct): ?>
                                     <button type="submit" name="update_product" class="btn-sm pri">Update Product</button>
-                                    <a href="/views/products/index.php" class="btn-sm out">Cancel</a>
+                                    <a href="<?= BASE_URL ?>views/products/index.php" class="btn-sm out">Cancel</a>
                                 <?php else: ?>
                                     <button type="submit" name="create_product" class="btn-sm pri">Add Product</button>
                                 <?php endif; ?>
@@ -205,7 +220,9 @@ $categories = $category->getAll();
                         $allSuppliers = $supplierObj->getAll();
                         // Filter out already-linked suppliers from dropdown
                         $linkedIds   = array_column($linked, 'id');
-                        $available   = array_filter($allSuppliers, fn($s) => !in_array($s['id'], $linkedIds));
+                        $available   = array_filter($allSuppliers, function ($s) use ($linkedIds) {
+                            return !in_array($s['id'], $linkedIds, true);
+                        });
                         ?>
 
                         <!-- Link new supplier -->
@@ -254,6 +271,7 @@ $categories = $category->getAll();
                     </div>
                     <?php endif; ?>
                 </div>
+                <?php endif; ?>
 
                 <!-- RIGHT: Products Table -->
                 <div class="section-card" style="margin-bottom:0;">
@@ -303,6 +321,7 @@ $categories = $category->getAll();
                                         </span>
                                     </td>
                                     <td>
+                                        <?php if ($canEdit): ?>
                                         <a href="?edit=<?= $p['id'] ?>" class="btn-sm out">Edit</a>
                                         <form method="POST" style="display:inline;"
                                               onsubmit="return confirm('Soft-delete this product?')">
@@ -311,6 +330,9 @@ $categories = $category->getAll();
                                             <input type="hidden" name="id" value="<?= $p['id'] ?>">
                                             <button type="submit" class="btn-sm red">Delete</button>
                                         </form>
+                                        <?php else: ?>
+                                        <span style="color:var(--text-muted); font-size:.8rem;">—</span>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>

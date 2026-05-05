@@ -68,11 +68,21 @@ function restoreFromDeletionLog($logId) {
             return ['status' => false, 'message' => 'Invalid snapshot data'];
         }
 
-        $tableName    = $log['table_name'];
-        $columns      = implode(', ', array_keys($data));
+        $tableName = $log['table_name'];
+        $data['deleted_at'] = null;
+        $columns      = implode(', ', array_map(function ($c) {
+            return '`' . str_replace('`', '``', $c) . '`';
+        }, array_keys($data)));
         $placeholders = implode(', ', array_fill(0, count($data), '?'));
+        $setClauses   = implode(', ', array_map(function ($c) {
+            $safe = str_replace('`', '``', $c);
+            return '`' . $safe . '` = VALUES(`' . $safe . '`)';
+        }, array_keys($data)));
 
-        $stmt = $db->prepare("INSERT INTO `$tableName` ($columns) VALUES ($placeholders)");
+        $stmt = $db->prepare(
+            "INSERT INTO `$tableName` ($columns) VALUES ($placeholders)
+             ON DUPLICATE KEY UPDATE $setClauses"
+        );
         $stmt->execute(array_values($data));
 
         $stmt = $db->prepare(
