@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <section class="auth-section" aria-labelledby="signin-heading">
             <h2 id="signin-heading" class="visually-hidden">Sign in with email</h2>
             <form method="post" class="auth-form">
+                <?php echo csrf_field(); ?>
                 <div class="form-group">
                     <label class="form-label" for="login-email">Email address</label>
                     <input id="login-email" type="email" name="email" class="form-input"

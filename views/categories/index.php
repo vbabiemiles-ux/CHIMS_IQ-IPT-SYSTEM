@@ -5,27 +5,13 @@ requireRole('admin');
 global $db;
 $user = currentUser();
 $category = new Category($db);
-$message  = '';
-$msgType  = 'success';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!csrf_check()) {
-        $message = 'Invalid CSRF token.';
-        $msgType = 'error';
-    } elseif (isset($_POST['create_category'])) {
-        $result  = $category->create($_POST['category_name'], $_POST['description'] ?? '');
-        $message = $result['message'];
-        $msgType = $result['status'] ? 'success' : 'error';
-    } elseif (isset($_POST['update_category'])) {
-        $result  = $category->update($_POST['id'], $_POST['category_name'], $_POST['description'] ?? '');
-        $message = $result['message'];
-        $msgType = $result['status'] ? 'success' : 'error';
-    } elseif (isset($_POST['soft_delete'])) {
-        $result  = $category->softDelete($_POST['id']);
-        $message = $result['message'];
-        $msgType = $result['status'] ? 'success' : 'error';
-    }
-}
+// Get messages from session
+$message = $_SESSION['success'] ?? $_SESSION['error'] ?? '';
+$msgType = isset($_SESSION['success']) ? 'success' : (isset($_SESSION['error']) ? 'error' : '');
+
+// Clear session messages after displaying
+unset($_SESSION['success'], $_SESSION['error']);
 
 $editCategory = null;
 if (isset($_GET['edit'])) {
@@ -69,7 +55,7 @@ $categories = $category->getAll();
             <!-- Add / Edit Form -->
             <div class="section-card" style="max-width:520px;">
                 <h3><?= $editCategory ? '✏️ Edit Category' : '➕ Add Category' ?></h3>
-                <form method="POST">
+                <form method="POST" action="<?= BASE_URL ?>controllers/categories/<?= $editCategory ? 'update' : 'create' ?>.php">
                     <?= csrf_field() ?>
                     <?php if ($editCategory): ?>
                         <input type="hidden" name="id" value="<?= $editCategory['id'] ?>">
@@ -89,10 +75,10 @@ $categories = $category->getAll();
 
                     <div style="display:flex; gap:10px; margin-top:8px;">
                         <?php if ($editCategory): ?>
-                            <button type="submit" name="update_category" class="btn-sm pri">Update Category</button>
+                            <button type="submit" class="btn-sm pri">Update Category</button>
                             <a href="<?= BASE_URL ?>views/categories/index.php" class="btn-sm out">Cancel</a>
                         <?php else: ?>
-                            <button type="submit" name="create_category" class="btn-sm pri">Add Category</button>
+                            <button type="submit" class="btn-sm pri">Add Category</button>
                         <?php endif; ?>
                     </div>
                 </form>
@@ -129,10 +115,9 @@ $categories = $category->getAll();
                                 <td><span class="bdg gd">Active</span></td>
                                 <td>
                                     <a href="?edit=<?= $cat['id'] ?>" class="btn-sm out">Edit</a>
-                                    <form method="POST" style="display:inline;"
+                                    <form method="POST" action="<?= BASE_URL ?>controllers/categories/delete.php" style="display:inline;"
                                           onsubmit="return confirm('Soft-delete this category?')">
                                         <?= csrf_field() ?>
-                                        <input type="hidden" name="soft_delete" value="1">
                                         <input type="hidden" name="id" value="<?= $cat['id'] ?>">
                                         <button type="submit" class="btn-sm red">Delete</button>
                                     </form>

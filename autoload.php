@@ -1,4 +1,11 @@
 <?php
+// Session security configuration
+// Only enable secure cookies when the request is served over HTTPS.
+$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+ini_set('session.cookie_httponly', '1');
+ini_set('session.cookie_secure', $isHttps ? '1' : '0');
+ini_set('session.cookie_samesite', 'Strict');
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

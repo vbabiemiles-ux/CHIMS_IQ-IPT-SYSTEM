@@ -14,6 +14,11 @@ class Auth {
      * Login user
      */
     public function login($email, $password) {
+        // CSRF validation
+        if (!csrf_check()) {
+            return ['status' => false, 'message' => 'Security validation failed. Please try again.'];
+        }
+
         try {
             $stmt = $this->conn->prepare(
                 "SELECT u.*, s.name as store_name
@@ -40,7 +45,7 @@ class Auth {
             return ['status' => true, 'role' => $user['role']];
 
         } catch (Throwable $e) {
-            return ['status' => false, 'message' => $e->getMessage()];
+            return ['status' => false, 'message' => 'An error occurred. Please try again later.'];
         }
     }
 
@@ -48,6 +53,11 @@ class Auth {
      * Register admin + store
      */
     public function registerAdmin($fullName, $email, $storeName, $password) {
+        // CSRF validation
+        if (!csrf_check()) {
+            return ['status' => false, 'message' => 'Security validation failed. Please try again.'];
+        }
+
         try {
             // Check email uniqueness
             $stmt = $this->conn->prepare("SELECT id FROM " . $this->usersTable . " WHERE email = ? LIMIT 1");
@@ -77,7 +87,7 @@ class Auth {
 
         } catch (Throwable $e) {
             $this->conn->rollBack();
-            return ['status' => false, 'message' => $e->getMessage()];
+            return ['status' => false, 'message' => 'An error occurred during registration. Please try again.'];
         }
     }
 

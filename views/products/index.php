@@ -16,55 +16,12 @@ $category        = new Category($db);
 $productSupplier = new ProductSupplier($db);
 $supplierObj     = new Supplier($db);
 
-$message = '';
-$msgType = 'success';
+// Get messages from session
+$message = $_SESSION['success'] ?? $_SESSION['error'] ?? '';
+$msgType = isset($_SESSION['success']) ? 'success' : (isset($_SESSION['error']) ? 'error' : '');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!$canEdit) {
-        $message = 'You have read-only access to products.';
-        $msgType = 'error';
-    } elseif (!csrf_check()) {
-        $message = 'Invalid CSRF token.';
-        $msgType = 'error';
-    } elseif (isset($_POST['create_product'])) {
-        $result  = $product->create(
-            $_POST['category_id'],
-            $_POST['product_name'],
-            $_POST['description'] ?? '',
-            $_POST['price'] ?? 0,
-            $_POST['brand'] ?? ''
-        );
-        $message = $result['message'];
-        $msgType = $result['status'] ? 'success' : 'error';
-
-    } elseif (isset($_POST['update_product'])) {
-        $result  = $product->update(
-            $_POST['id'],
-            $_POST['category_id'],
-            $_POST['product_name'],
-            $_POST['description'] ?? '',
-            $_POST['price'] ?? 0,
-            $_POST['brand'] ?? ''
-        );
-        $message = $result['message'];
-        $msgType = $result['status'] ? 'success' : 'error';
-
-    } elseif (isset($_POST['soft_delete'])) {
-        $result  = $product->softDelete($_POST['id']);
-        $message = $result['message'];
-        $msgType = $result['status'] ? 'success' : 'error';
-
-    } elseif (isset($_POST['link_supplier'])) {
-        $result  = $productSupplier->link($_POST['product_id'], $_POST['supplier_id']);
-        $message = $result['message'];
-        $msgType = $result['status'] ? 'success' : 'error';
-
-    } elseif (isset($_POST['unlink_supplier'])) {
-        $result  = $productSupplier->unlink($_POST['product_id'], $_POST['supplier_id']);
-        $message = $result['message'];
-        $msgType = $result['status'] ? 'success' : 'error';
-    }
-}
+// Clear session messages after displaying
+unset($_SESSION['success'], $_SESSION['error']);
 
 $editProduct = null;
 if (isset($_GET['edit'])) {
@@ -147,7 +104,7 @@ $categories = $category->getAll();
                 <div>
                     <div class="section-card">
                         <h3><?= $editProduct ? '✏️ Edit Product' : '➕ Add Product' ?></h3>
-                        <form method="POST">
+                        <form method="POST" action="<?= BASE_URL ?>controllers/products/<?= $editProduct ? 'update' : 'create' ?>.php">
                             <?= csrf_field() ?>
                             <?php if ($editProduct): ?>
                                 <input type="hidden" name="id" value="<?= $editProduct['id'] ?>">
@@ -197,10 +154,10 @@ $categories = $category->getAll();
 
                             <div style="display:flex; gap:10px; margin-top:8px;">
                                 <?php if ($editProduct): ?>
-                                    <button type="submit" name="update_product" class="btn-sm pri">Update Product</button>
+                                    <button type="submit" class="btn-sm pri">Update Product</button>
                                     <a href="<?= BASE_URL ?>views/products/index.php" class="btn-sm out">Cancel</a>
                                 <?php else: ?>
-                                    <button type="submit" name="create_product" class="btn-sm pri">Add Product</button>
+                                    <button type="submit" class="btn-sm pri">Add Product</button>
                                 <?php endif; ?>
                             </div>
                         </form>
@@ -227,7 +184,7 @@ $categories = $category->getAll();
 
                         <!-- Link new supplier -->
                         <?php if (!empty($available)): ?>
-                        <form method="POST" style="display:flex; gap:8px; margin-bottom:16px; align-items:center;">
+                        <form method="POST" action="<?= BASE_URL ?>controllers/products/link_supplier.php" style="display:flex; gap:8px; margin-bottom:16px; align-items:center;">
                             <?= csrf_field() ?>
                             <input type="hidden" name="product_id" value="<?= $editProduct['id'] ?>">
                             <select name="supplier_id" class="form-input" style="flex:1;">
@@ -238,7 +195,7 @@ $categories = $category->getAll();
                                 </option>
                                 <?php endforeach; ?>
                             </select>
-                            <button type="submit" name="link_supplier" class="btn-sm pri">Link</button>
+                            <button type="submit" class="btn-sm pri">Link</button>
                         </form>
                         <?php else: ?>
                         <p style="font-size:.82rem; color:var(--text-muted); margin-bottom:14px;">
@@ -256,12 +213,12 @@ $categories = $category->getAll();
                                         <?= htmlspecialchars($s['phone']) ?>
                                     </span>
                                 </div>
-                                <form method="POST"
+                                <form method="POST" action="<?= BASE_URL ?>controllers/products/unlink_supplier.php"
                                       onsubmit="return confirm('Unlink this supplier?')">
                                     <?= csrf_field() ?>
                                     <input type="hidden" name="product_id" value="<?= $editProduct['id'] ?>">
                                     <input type="hidden" name="supplier_id" value="<?= $s['id'] ?>">
-                                    <button type="submit" name="unlink_supplier" class="btn-sm red">Unlink</button>
+                                    <button type="submit" class="btn-sm red">Unlink</button>
                                 </form>
                             </div>
                             <?php endforeach; ?>
@@ -323,10 +280,9 @@ $categories = $category->getAll();
                                     <td>
                                         <?php if ($canEdit): ?>
                                         <a href="?edit=<?= $p['id'] ?>" class="btn-sm out">Edit</a>
-                                        <form method="POST" style="display:inline;"
+                                        <form method="POST" action="<?= BASE_URL ?>controllers/products/delete.php" style="display:inline;"
                                               onsubmit="return confirm('Soft-delete this product?')">
                                             <?= csrf_field() ?>
-                                            <input type="hidden" name="soft_delete" value="1">
                                             <input type="hidden" name="id" value="<?= $p['id'] ?>">
                                             <button type="submit" class="btn-sm red">Delete</button>
                                         </form>

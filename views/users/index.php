@@ -58,7 +58,7 @@ exit; */
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <form action="/controllers/users/update.php" method="POST">
+            <form action="<?= BASE_URL ?>controllers/users/update.php" method="POST">
 
                 <div class="modal-header">
                     <h5 class="modal-title">Edit User</h5>

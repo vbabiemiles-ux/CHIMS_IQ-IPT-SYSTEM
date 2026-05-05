@@ -67,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <section class="auth-section" aria-labelledby="register-form-heading">
             <h2 id="register-form-heading" class="visually-hidden">Registration form</h2>
             <form method="post" class="auth-form">
+                <?php echo csrf_field(); ?>
                 <div class="form-group">
                     <label class="form-label" for="reg-full-name">Full name</label>
                     <input id="reg-full-name" type="text" name="full_name" class="form-input"

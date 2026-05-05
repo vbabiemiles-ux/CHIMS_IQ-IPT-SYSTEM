@@ -5,38 +5,13 @@ requireRole('admin');
 global $db;
 $user = currentUser();
 $supplier = new Supplier($db);
-$message  = '';
-$msgType  = 'success';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!csrf_check()) {
-        $message = 'Invalid CSRF token.';
-        $msgType = 'error';
-    } elseif (isset($_POST['create_supplier'])) {
-        $result  = $supplier->create(
-            $_POST['supplier_name'],
-            $_POST['phone'],
-            $_POST['email'],
-            $_POST['address']
-        );
-        $message = $result['message'];
-        $msgType = $result['status'] ? 'success' : 'error';
-    } elseif (isset($_POST['update_supplier'])) {
-        $result  = $supplier->update(
-            $_POST['id'],
-            $_POST['supplier_name'],
-            $_POST['phone'],
-            $_POST['email'],
-            $_POST['address']
-        );
-        $message = $result['message'];
-        $msgType = $result['status'] ? 'success' : 'error';
-    } elseif (isset($_POST['soft_delete'])) {
-        $result  = $supplier->softDelete($_POST['id']);
-        $message = $result['message'];
-        $msgType = $result['status'] ? 'success' : 'error';
-    }
-}
+// Get messages from session
+$message = $_SESSION['success'] ?? $_SESSION['error'] ?? '';
+$msgType = isset($_SESSION['success']) ? 'success' : (isset($_SESSION['error']) ? 'error' : '');
+
+// Clear session messages after displaying
+unset($_SESSION['success'], $_SESSION['error']);
 
 $editSupplier = null;
 if (isset($_GET['edit'])) {
@@ -80,7 +55,7 @@ $suppliers = $supplier->getAll();
             <!-- Add / Edit Form -->
             <div class="section-card" style="max-width:600px;">
                 <h3><?= $editSupplier ? '✏️ Edit Supplier' : '➕ Add Supplier' ?></h3>
-                <form method="POST">
+                <form method="POST" action="<?= BASE_URL ?>controllers/suppliers/<?= $editSupplier ? 'update' : 'create' ?>.php">
                     <?= csrf_field() ?>
                     <?php if ($editSupplier): ?>
                         <input type="hidden" name="id" value="<?= $editSupplier['id'] ?>">
@@ -116,10 +91,10 @@ $suppliers = $supplier->getAll();
 
                     <div style="display:flex; gap:10px; margin-top:8px;">
                         <?php if ($editSupplier): ?>
-                            <button type="submit" name="update_supplier" class="btn-sm pri">Update Supplier</button>
+                            <button type="submit" class="btn-sm pri">Update Supplier</button>
                             <a href="<?= BASE_URL ?>views/suppliers/index.php" class="btn-sm out">Cancel</a>
                         <?php else: ?>
-                            <button type="submit" name="create_supplier" class="btn-sm pri">Add Supplier</button>
+                            <button type="submit" class="btn-sm pri">Add Supplier</button>
                         <?php endif; ?>
                     </div>
                 </form>
@@ -160,10 +135,9 @@ $suppliers = $supplier->getAll();
                                 </td>
                                 <td>
                                     <a href="?edit=<?= $sup['id'] ?>" class="btn-sm out">Edit</a>
-                                    <form method="POST" style="display:inline;"
+                                    <form method="POST" action="<?= BASE_URL ?>controllers/suppliers/delete.php" style="display:inline;"
                                           onsubmit="return confirm('Soft-delete this supplier?')">
                                         <?= csrf_field() ?>
-                                        <input type="hidden" name="soft_delete" value="1">
                                         <input type="hidden" name="id" value="<?= $sup['id'] ?>">
                                         <button type="submit" class="btn-sm red">Delete</button>
                                     </form>

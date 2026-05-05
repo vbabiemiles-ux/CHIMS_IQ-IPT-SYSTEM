@@ -6,7 +6,7 @@ ob_start();
 
 <h2>Create User</h2>
 
-<form action="/controllers/users/create.php" method="POST" class="card p-3">
+<form action="<?= BASE_URL ?>controllers/users/create.php" method="POST" class="card p-3">
 
     <?= csrf_field() ?>
     <div class="mb-3">

@@ -30,5 +30,5 @@ if ($result['status']) {
     $_SESSION['error'] = $result['message'];
 }
 
-header("Location: /views/users/index.php");
+header("Location: " . BASE_URL . "views/users/index.php");
 exit;
